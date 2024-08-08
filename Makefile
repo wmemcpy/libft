@@ -104,22 +104,22 @@ all: $(NAME)
 $(NAME): $(OFILE)
 	@ar rc $(NAME) $(OFILE)
 	@ranlib $(NAME)
-	@echo "[$(GREEN)OK$(DEFAULT)] $(BOLD)$(UNDERLINE)$(BLUE)$(NAME)$(DEFAULT) is created!"
+	@printf "[${GREEN}OK${DEFAULT}] ${BOLD}${UNDERLINE}${BLUE}${NAME}${DEFAULT} is created!\n"
 
 $(ODIR)%.o: $(SDIR)%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I. -o $@ -c $<
 	@$(eval CURRENT_SRC := $(shell echo $$(($(CURRENT_SRC) + 1))))
 	@$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_SRC) * 100 / $(TOTAL_SRCS)))))
-	@echo "[$(GREEN)$(PERCENTAGE)%$(DEFAULT): $(GREEN)$(CURRENT_SRC)$(DEFAULT)/$(GREEN)$(TOTAL_SRCS)$(DEFAULT)] [$(BOLD)$(UNDERLINE)$(BLUE)$<$(DEFAULT)]"
+	@printf "[${GREEN}%d%%${DEFAULT}: ${GREEN}%d${DEFAULT}/${GREEN}%d${DEFAULT}] [${BOLD}${UNDERLINE}${BLUE}%s${DEFAULT}]\n" $(PERCENTAGE) $(CURRENT_SRC) $(TOTAL_SRCS) $<
 
 clean:
 	@rm -rf $(ODIR)
-	@echo "[$(RED)OK$(DEFAULT)] $(BOLD)$(UNDERLINE)$(BLUE)$(ODIR) is deleted!$(DEFAULT)"
+	@printf "[${RED}OK${DEFAULT}] ${BOLD}${UNDERLINE}${BLUE}${ODIR}${DEFAULT} is deleted!\n"
 
 fclean: clean
 	@rm -rf $(NAME)
-	@echo "[$(RED)OK$(DEFAULT)] $(BOLD)$(UNDERLINE)$(BLUE)$(NAME) is deleted!$(DEFAULT)"
+	@printf "[${RED}OK${DEFAULT}] ${BOLD}${UNDERLINE}${BLUE}${NAME}${DEFAULT} is deleted!\n"
 
 re: fclean all
 
