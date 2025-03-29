@@ -1,126 +1,90 @@
 NAME = libft.a
+
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fno-builtin -ffreestanding
+AR = ar rcs
+RM = rm -f
 
-SDIR = src/
-ODIR = .obj/
-# IDIR = inc/
+SRC_DIR = src
+OBJ_DIR = obj
+INCLUDE_DIR = include
 
-BONUS =		bonus/ft_lstdelone.c \
-			bonus/ft_lstadd_front.c \
-			bonus/ft_lstclear.c \
-			bonus/ft_lstadd_back.c \
-			bonus/ft_lstnew.c \
-			bonus/ft_lstsize.c \
-			bonus/ft_lstiter.c \
-			bonus/ft_lstmap.c \
-			bonus/ft_lstlast.c
+CFLAGS = -Wall -Wextra -Werror -I$(INCLUDE_DIR)
+DEPFLAGS = -MMD -MP
 
-CTYPE =		ctype/ft_isalpha.c \
-			ctype/ft_isalnum.c \
-			ctype/ft_isdigit.c \
-			ctype/ft_isascii.c \
-			ctype/ft_isxdigit.c \
-			ctype/ft_iscntrl.c \
-			ctype/ft_isprint.c \
-			ctype/ft_tolower.c \
-			ctype/ft_toupper.c \
-			ctype/ft_ispunct.c \
-			ctype/ft_isspace.c \
-			ctype/ft_islower.c \
-			ctype/ft_isupper.c \
-			ctype/ft_isgraph.c \
-
-STRING =	string/ft_memcmp.c \
-			string/ft_strndup.c \
-			string/ft_memcpy.c \
-			string/ft_strnstr.c \
-			string/ft_memmove.c \
-			string/ft_strncpy.c \
-			string/ft_strcmp.c \
-			string/ft_strcpy.c \
-			string/ft_strncmp.c \
-			string/ft_strlen.c \
-			string/ft_bzero.c \
-			string/ft_strnlen.c \
-			string/ft_memset.c \
-			string/ft_strchr.c \
-			string/ft_strlcat.c \
-			string/ft_memchr.c \
-			string/ft_strrchr.c \
-			string/ft_strlcpy.c \
-
-
-STDLIB =	stdlib/ft_calloc.c \
-			stdlib/ft_realloc.c \
-			stdlib/ft_atof.c \
-			stdlib/ft_atol.c \
-			stdlib/ft_atoi.c \
-			stdlib/ft_atoll.c \
-			stdlib/ft_strdup.c \
-
-LIBFT =		libft/ft_putendl_fd.c \
-			libft/ft_strtrim.c \
-			libft/ft_putstr_fd.c \
-			libft/ft_substr.c \
-			libft/ft_strmapi.c \
-			libft/ft_itoa.c \
-			libft/ft_putchar_fd.c \
-			libft/ft_strjoin.c \
-			libft/ft_split.c \
-			libft/ft_len_array.c \
-			libft/ft_free_array.c \
-			libft/ft_putnbr_fd.c \
-			libft/ft_striteri.c \
-
-CFILE = $(addprefix $(SDIR), $(CTYPE)) \
-		$(addprefix $(SDIR), $(STRING)) \
-		$(addprefix $(SDIR), $(STDLIB)) \
-		$(addprefix $(SDIR), $(LIBFT))
-
-OFILE = $(addprefix $(ODIR), $(CTYPE:.c=.o)) \
-		$(addprefix $(ODIR), $(STRING:.c=.o)) \
-		$(addprefix $(ODIR), $(STDLIB:.c=.o)) \
-		$(addprefix $(ODIR), $(LIBFT:.c=.o))
-
-TOTAL_SRCS := $(words $(CFILE))
-CURRENT_SRC := 0
-PERCENTAGE := 0
-
-DEFAULT = \033[0m
+RESET = \033[0m
 BOLD = \033[1m
+DIM = \033[2m
 UNDERLINE = \033[4m
-BLACK = \033[30m
-RED = \033[31m
-GREEN = \033[32m
-YELLOW = \033[33m
-BLUE = \033[34m
-MAGENTA = \033[35m
-CYAN = \033[36m
-WHITE = \033[37m
+RED = \033[0;31m
+GREEN = \033[0;32m
+YELLOW = \033[0;33m
+BLUE = \033[0;34m
+MAGENTA = \033[0;35m
+CYAN = \033[0;36m
+GRAY = \033[0;90m
+
+SRCS_FILES = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
+			 ft_strlen.c ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c \
+			 ft_strlcpy.c ft_strlcat.c ft_toupper.c ft_tolower.c ft_strchr.c \
+			 ft_strrchr.c ft_strncmp.c ft_memchr.c ft_memcmp.c ft_strnstr.c \
+			 ft_atoi.c ft_calloc.c ft_strdup.c \
+			 ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c \
+			 ft_strmapi.c ft_striteri.c ft_putchar_fd.c ft_putstr_fd.c \
+			 ft_putendl_fd.c ft_putnbr_fd.c
+
+SRCS_BONUS_FILES = ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstsize_bonus.c \
+				   ft_lstlast_bonus.c ft_lstadd_back_bonus.c ft_lstdelone_bonus.c \
+				   ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c
+
+SRCS = $(addprefix $(SRC_DIR)/, $(SRCS_FILES))
+SRCS_BONUS = $(addprefix $(SRC_DIR)/, $(SRCS_BONUS_FILES))
+
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+OBJS_BONUS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS_BONUS))
+
+DEPS = $(OBJS:.o=.d)
+DEPS_BONUS = $(OBJS_BONUS:.o=.d)
+
 
 all: $(NAME)
 
-$(NAME): $(OFILE)
-	@ar rc $(NAME) $(OFILE)
-	@ranlib $(NAME)
-	@printf "[${GREEN}OK${DEFAULT}] ${BOLD}${UNDERLINE}${BLUE}${NAME}${DEFAULT} is created!\n"
+$(NAME): $(OBJ_DIR) $(OBJS)
+	@$(AR) $(NAME) $(OBJS)
+	@echo -e "$(GREEN)$(BOLD)✓ Mandatory $(NAME) created successfully!$(RESET)"
 
-$(ODIR)%.o: $(SDIR)%.c
-	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -I. -o $@ -c $<
-	@$(eval CURRENT_SRC := $(shell echo $$(($(CURRENT_SRC) + 1))))
-	@$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_SRC) * 100 / $(TOTAL_SRCS)))))
-	@printf "[${GREEN}%d%%${DEFAULT}: ${GREEN}%d${DEFAULT}/${GREEN}%d${DEFAULT}] [${BOLD}${UNDERLINE}${BLUE}%s${DEFAULT}]\n" $(PERCENTAGE) $(CURRENT_SRC) $(TOTAL_SRCS) $<
+bonus: CFLAGS += -DBONUS_FLAG=1
+bonus: $(OBJ_DIR) $(OBJS) $(OBJS_BONUS)
+	@$(AR) $(NAME) $(OBJS) $(OBJS_BONUS)
+	@echo -e "$(GREEN)$(BOLD)✓ $(NAME) with Bonus parts created successfully!$(RESET)"
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@echo -e "$(YELLOW)Compiling:$(RESET) $<"
+	@$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+	@echo -e "$(BLUE)Created directory:$(RESET) $(OBJ_DIR)"
 
 clean:
-	@rm -rf $(ODIR)
-	@printf "[${RED}OK${DEFAULT}] ${BOLD}${UNDERLINE}${BLUE}${ODIR}${DEFAULT} is deleted!\n"
+	@if [ -d "$(OBJ_DIR)" ]; then \
+		$(RM) -r $(OBJ_DIR); \
+		echo -e "$(MAGENTA)Cleaned object directory:$(RESET) $(OBJ_DIR)"; \
+	else \
+		echo -e "$(GRAY)Object directory $(OBJ_DIR) not found. Nothing to clean.$(RESET)"; \
+	fi
 
 fclean: clean
-	@rm -rf $(NAME)
-	@printf "[${RED}OK${DEFAULT}] ${BOLD}${UNDERLINE}${BLUE}${NAME}${DEFAULT} is deleted!\n"
+	@if [ -f "$(NAME)" ]; then \
+		$(RM) $(NAME); \
+		echo -e "$(RED)Cleaned library:$(RESET) $(NAME)"; \
+	else \
+		echo -e "$(GRAY)Library $(NAME) not found. Nothing to clean.$(RESET)"; \
+	fi
+
 
 re: fclean all
 
-.PHONY: all clean fclean re
+-include $(DEPS)
+-include $(DEPS_BONUS)
+
+.PHONY: all clean fclean re bonus
