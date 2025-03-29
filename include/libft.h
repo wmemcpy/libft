@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
+#include <stdarg.h>
 
 // Part 1
 int ft_isalpha(int c);
@@ -60,5 +61,16 @@ void ft_lstdelone(t_list *lst, void (*del)(void *));
 void ft_lstclear(t_list **lst, void (*del)(void *));
 void ft_lstiter(t_list *lst, void (*f)(void *));
 t_list *ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+// ft_printf
+int ft_printf(const char *format, ...);
+int ft_print_char(int c);
+int ft_print_str(char *s);
+int ft_print_ptr(unsigned long long ptr);
+int ft_print_nbr(int n);
+int ft_print_unsigned(unsigned int n);
+int ft_print_hex(unsigned int n, const char format);
+void ft_put_hex_digit(unsigned long long n, const char format);
+int ft_hex_len(unsigned long long n);
 
 #endif
